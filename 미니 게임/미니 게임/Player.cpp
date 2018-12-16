@@ -1,9 +1,13 @@
 ﻿#include "Player.h"
 #include "InputHandler.h"
+#include "Game.h"
+#include "PlayState.h"
+
+Uint32 startTime, currentTime;
+const float shootTime = 400.0f;
 
 Player::Player(const LoaderParams* pParams) :SDLGameObject(pParams)
 {
-
 }
 
 void Player::draw()
@@ -24,7 +28,10 @@ void Player::update()
 void Player::clean()
 {
 }
-
+void Player::fire()
+{
+	
+}
 void Player::handleInput()
 {
 	if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_RIGHT))
@@ -48,7 +55,17 @@ void Player::handleInput()
 	{
 		m_velocity.setX(1);
 	}
+	if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_SPACE))
+	{
+		startTime = SDL_GetTicks();
 
+		if (shootTime <= startTime - currentTime)
+		{
+			Bullet *bullet = new Bullet(new LoaderParams(Player::m_position.getX() + 128, Player::m_position.getY() + 10, 47, 47, "bullet"));
+			PlayState::Instance()->m_bullet.push_back(bullet);
+			currentTime = SDL_GetTicks();
+		}
+	}
 	// void Enemy::handleInput() 추가 : 마우스 motion
 	Vector2D* vec = TheInputHandler::Instance()->getMousePosition();
 	m_velocity = (*vec - m_position) / 100;

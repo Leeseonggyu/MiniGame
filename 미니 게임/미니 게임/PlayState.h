@@ -2,6 +2,7 @@
 #include "GameState.h"
 #include "SDLGameObject.h"
 #include "Background.h"
+#include "Bullet.h"
 
 class PlayState : public GameState
 {
@@ -12,6 +13,8 @@ public:
 	virtual bool onExit();
 	virtual bool checkCollision(SDLGameObject* p1, SDLGameObject* p2);
 	virtual std::string getStateID() const { return s_playID; }
+
+	std::vector <Bullet*> m_bullet;
 
 	static PlayState* Instance()
 	{

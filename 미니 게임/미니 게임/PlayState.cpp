@@ -3,6 +3,7 @@
 #include "PauseState.h"
 #include "SDLGameObject.h"
 #include "GameOverState.h"
+#include "Bullet.h"
 #include <SDL.h>
 
 const std::string PlayState::s_playID = "PLAY";
@@ -36,6 +37,10 @@ bool PlayState::checkCollision(SDLGameObject* p1, SDLGameObject* p2)
 
 void PlayState::update()
 {
+	for (int i = 0; i < m_bullet.size(); i++)
+	{
+		m_bullet[i]->update();
+	}
 
 	for (int i = 0; i < m_gameObjects.size(); i++) {
 		m_gameObjects[i]->update();
@@ -46,15 +51,20 @@ void PlayState::update()
 	{
 		TheGame::Instance()->getStateMachine()->changeState(GameOverState::Instance());
 	}
-
+	
 	if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_ESCAPE))
 	{
 		TheGame::Instance()->getStateMachine()->changeState(PauseState::Instance());
 	}
+	
 }
 
 void PlayState::render()
 {
+	for (int i = 0; i < m_bullet.size(); i++)
+	{
+		m_bullet[i]->draw();
+	}
 	for (int i = 0; i < m_gameObjects.size(); i++)
 	{
 		m_gameObjects[i]->draw();
@@ -78,14 +88,18 @@ bool PlayState::onEnter()
 		"Enemy", TheGame::Instance()->getRenderer())) {
 		return false;
 	};
+	if (!TheTextureManager::Instance()->load("assets/xbullet.png",
+		"bulllet", TheGame::Instance()->getRenderer()))
+	{
+		return false;
+	}
 	GameObject* background = new Background(new LoaderParams(0, 0, 853, 480, "back"));
-	
+
 	GameObject* player = new Player(
 		new LoaderParams(500, 100, 76, 82, "Reimu"));
 	GameObject* enemy = new Enemy(
 		new LoaderParams(100, 100, 92, 122, "Enemy"));
 
-	//배경 이미지 출력 실패 게임 오브젝트로 출력시 충돌로 게임 오버 일어남
 	m_gameObjects.push_back(background);
 	m_gameObjects.push_back(player);
 	m_gameObjects.push_back(enemy);
@@ -102,7 +116,7 @@ bool PlayState::onExit()
 	};
 	m_gameObjects.clear();
 
-	TheTextureManager::Instance()->clearFromTextureMap("helicopter");
+	TheTextureManager::Instance()->clearFromTextureMap("Reimu");
 	std::cout << "exiting PlayState\n";
 	return true;
 }
