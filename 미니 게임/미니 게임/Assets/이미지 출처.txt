@@ -1,0 +1,5 @@
+grid_bg: https://opengameart.org/content/grid-background
+Castlemaze_Reimu: http://spritedatabase.net/game/2600
+battleback: https://opengameart.org/content/backgrounds-3
+Castlemaze_Enemies: http://spritedatabase.net/file/18344/Enemies
+
